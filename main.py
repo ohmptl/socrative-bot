@@ -99,7 +99,7 @@ def solve_question():
         print(f"Gemini suggests: {question_number}")
         return question_number
     except Exception as e:
-        print(f"Error querying ChatGPT: {e}")
+        print(f"Error querying Gemini: {e}")
         return random.choice([1, 2, 3, 4])
 
 # Function to check if rejoining the room is required
@@ -141,7 +141,7 @@ def monitor_and_answer(room_name, student_name):
 
             # If the question has changed, answer it
             if current_question_text != last_question_text:
-                print(f"New question detected: {current_question_text}")
+                print(f"New question detected")
                 last_question_text = current_question_text
                 answer_question()
             else:
