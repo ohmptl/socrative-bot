@@ -1,8 +1,11 @@
+import time, random, os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import time
-import random
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure the Selenium WebDriver (adjust the driver path if necessary)
 driver = webdriver.Chrome()
@@ -112,6 +115,6 @@ def run_quiz_bot(room_name, student_name):
 
 # Run the bot with your Socrative room name and student name
 if __name__ == "__main__":
-    room_name = "MALIK4036"  # Replace with the actual room name
-    student_name = "Malik_Vikram"   # Replace with the actual student name
+    room_name = os.getenv("ROOM_NAME")  # Get the room name from the environment variable
+    student_name = os.getenv("STUDENT_NAME")  # Get the student name from the environment variable
     run_quiz_bot(room_name, student_name)
