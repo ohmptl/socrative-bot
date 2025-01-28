@@ -15,7 +15,6 @@ A smart, AI-powered bot designed to automatically answer Socrative questions, st
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
@@ -24,7 +23,7 @@ To get started with the Socrative Bot, follow these steps:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/socrative-bot.git
+   git clone https://github.com/ohmptl/socrative-bot.git
    cd socrative-bot
    ```
 
@@ -59,27 +58,7 @@ Ensure you follow any API usage policies for services used.
 
 - **Python**: Core programming language.
 - **OpenAI API**: For AI-powered question answering.
-- **BeautifulSoup/Selenium**: For web scraping and interaction (if applicable).
-- **Flask/FastAPI** (optional): For a web-based user interface.
-
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature description"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request.
+- **BeautifulSoup/Selenium**: For web scraping and interaction.
 
 ## License
 
