@@ -33,7 +33,7 @@ def join_socrative_quiz(room_name, student_name):
         student_name_input.send_keys(student_name)
         student_name_input.send_keys(Keys.RETURN)
         print(f"Entered student name: {student_name}")
-        time.sleep(5)  # Wait for the teacher to start the quiz
+        time.sleep(2)  # Wait for the teacher to start the quiz
     except Exception as e:
         print(f"Error while joining room: {e}")
 
@@ -43,12 +43,16 @@ def answer_question():
         # Solve the question using the Gemini API
         answer = solve_question()
         answer = int(answer)
-        print(f"Answer HERE: {answer} (1-4)")
+
+        # Convert answer to index (0-3)
+        selected_index = answer-1
+        if selected_index < 0 or selected_index >= len(options_elements):
+            print("Invalid answer index")
+            selected_index = random.randint(0, 3)  # Fallback to random if invalid index
 
         # Locate options
         options_elements = driver.find_elements(By.CLASS_NAME, "answerContentWrapper")
 
-        selected_index = answer-1
         # Select the option
         options_elements[selected_index].click()
         print("Answered a question.")
@@ -58,6 +62,7 @@ def answer_question():
         submit_button = driver.find_element(By.ID, "submit-button")
         submit_button.click()
         time.sleep(2)  # Short wait after submission
+
     except Exception as e:
         print(f"Error: {e}")
 
@@ -138,12 +143,11 @@ def monitor_and_answer(room_name, student_name):
             if current_question_text != last_question_text:
                 print(f"New question detected: {current_question_text}")
                 last_question_text = current_question_text
-                time.sleep(5)
                 answer_question()
             else:
                 print("No new question yet. Retrying...")
             
-            time.sleep(5)  # Check frequently (adjust as needed)
+            time.sleep(os.getenv('POLLING_INTERVAL'))  # Check frequently (adjust as needed)
         except Exception as e:
             print(f"Waiting for the next question or quiz ended. Error: {e}")
             time.sleep(5)
