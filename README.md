@@ -69,4 +69,8 @@ python main.py
 
 ## Disclaimer
 
-This project is intended for educational purposes only. Ensure compliance with Socrative's terms of service and use responsibly.
+DISCLAIMER: This project is intended for educational purposes only. 
+The creators of this software are not responsible or liable for any illegal, unethical, or violative activities conducted using this tool. 
+By using this software, you agree to comply with all applicable laws and Socrative's terms of service. 
+This tool is not intended to be used for cheating, academic dishonesty, or any other form of misconduct. 
+Use responsibly and at your own risk.
