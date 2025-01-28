@@ -2,6 +2,7 @@ import time, random, os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -9,6 +10,10 @@ load_dotenv()
 
 # Configure the Selenium WebDriver (adjust the driver path if necessary)
 driver = webdriver.Chrome()
+
+# Set up the Gemini API
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Function to log in and join the quiz
 def join_socrative_quiz(room_name, student_name):
@@ -35,22 +40,62 @@ def join_socrative_quiz(room_name, student_name):
 # Function to answer a multiple-choice question
 def answer_question():
     try:
-        # Locate all available options for the current question
-        options = driver.find_elements(By.CLASS_NAME, "answerContentWrapper")
-        if options:
-            # Choose a random option (0 to 3 for 4 choices)
-            selected_option = random.choice(options)
-            selected_option.click()
-            print("Answered a question.")
+        # Solve the question using the Gemini API
+        answer = solve_question()
+        answer = int(answer)
+        print(f"Answer HERE: {answer} (1-4)")
 
-            # Click the submit button
-            submit_button = driver.find_element(By.ID, "submit-button")
-            submit_button.click()
-            time.sleep(2)  # Short wait after submission
-        else:
-            print("No options found. Waiting for the next question.")
+        # Locate options
+        options_elements = driver.find_elements(By.CLASS_NAME, "answerContentWrapper")
+
+        selected_index = answer-1
+        # Select the option
+        options_elements[selected_index].click()
+        print("Answered a question.")
+        time.sleep(5)
+
+        # Click the submit button
+        submit_button = driver.find_element(By.ID, "submit-button")
+        submit_button.click()
+        time.sleep(2)  # Short wait after submission
     except Exception as e:
         print(f"Error: {e}")
+
+def solve_question():
+    try:
+        # Read the question using Selenium
+        question_element = driver.find_element(By.CLASS_NAME, 'question-text')
+        question_text = question_element.text
+
+        # Assuming the options are within elements with a common CSS class
+        option_elements = driver.find_elements(By.CLASS_NAME, 'mc-answer-option-text')
+        options = [option.text for option in option_elements[:4]]  # Get up to 4 options
+
+        # Prepare the payload for the Gemini API
+        payload = {
+            'prompt' : f"Answer the following multiple-choice question by providing *only* the number corresponding to the correct answer.  Do not provide any other text or explanation.",
+            'question': question_text,
+            'options': options,
+        }
+
+        input_text = (
+            f"{payload['prompt']}\n"
+            f"Question: {payload['question']}\n"
+            f"Options:\n"
+        )
+
+        for option in payload['options']:
+            input_text += f"  - {option}\n"
+
+        response = model.generate_content(input_text)
+
+        question_number = response.text
+        print(input_text)
+        print(f"Gemini suggests: {question_number}")
+        return question_number
+    except Exception as e:
+        print(f"Error querying ChatGPT: {e}")
+        return random.choice([1, 2, 3, 4])
 
 # Function to check if rejoining the room is required
 def check_rejoin(room_name, student_name):
