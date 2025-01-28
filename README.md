@@ -1,13 +1,6 @@
 # Socrative Bot
 
-A smart, AI-powered bot designed to automatically answer Socrative questions, streamlining the learning experience by leveraging the latest advancements in artificial intelligence.
-
-## Features
-
-- **AI-Powered Answering:** Uses cutting-edge AI to analyze and answer Socrative questions.
-- **Automation:** Saves time by answering questions automatically for users.
-- **Ease of Use:** Simple setup and intuitive interface.
-- **Customizable:** Configure the bot to suit your specific needs.
+An AI-powered bot designed to answer Socrative questions automatically.
 
 ## Table of Contents
 
