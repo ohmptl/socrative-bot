@@ -46,6 +46,7 @@ You'll need to set up a few environment variables:
 * `ROOM_NAME`: Your Socrative room.
 * `STUDENT_NAME`: Your name as per instructor guidelines.
 * `GEMINI_API_KEY`: The Gemini API Key to run the AI.
+* `POLLING_INTERVAL`: The polling rate of the bot (default is 5).
 
 Do this by creating a `.env` file in the root of the project as follows:
 
@@ -53,6 +54,7 @@ Do this by creating a `.env` file in the root of the project as follows:
 ROOM_NAME=
 STUDENT_NAME=
 GEMINI_API_KEY=
+POLLING_INTERVAL=
 ```
 
 Ensure you follow any API usage policies for services used.
