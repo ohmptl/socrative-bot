@@ -4,11 +4,23 @@ An AI-powered bot designed to answer Socrative questions automatically.
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
+- [Example](#example)
 - [Technologies Used](#technologies-used)
-- [License](#license)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Disclaimer](#disclaimer)
+
+### Example
+
+1. Launch the bot and provide your Socrative session details.
+2. Watch as the bot automatically answers questions in real-time.
+
+## Technologies Used
+
+- **Python**: Core programming language.
+- **Gemini API**: For AI-powered question answering.
+- **Selenium**: For web scraping and interaction.
 
 ## Installation
 
@@ -27,6 +39,24 @@ To get started with the Socrative Bot, follow these steps:
 
 3. Set up the necessary API keys or configuration files as described in the [Configuration](#configuration) section.
 
+## Configuration
+
+You'll need to set up a few environment variables:
+
+* `ROOM_NAME`: Your Socrative room.
+* `STUDENT_NAME`: Your name as per instructor guidelines.
+* `GEMINI_API_KEY`: The Gemini API Key to run the AI.
+
+Do this by creating a `.env` file in the root of the project as follows:
+
+```env
+ROOM_NAME=
+STUDENT_NAME=
+GEMINI_API_KEY=
+```
+
+Ensure you follow any API usage policies for services used.
+
 ## Usage
 
 Run the bot with the following command:
@@ -34,28 +64,6 @@ Run the bot with the following command:
 ```bash
 python main.py
 ```
-
-### Example
-
-1. Launch the bot and provide your Socrative session details.
-2. Watch as the bot automatically answers questions in real-time.
-
-## Configuration
-
-- **AI Model:** Configure the AI model (e.g., OpenAI's GPT, Hugging Face) in the `config.json` file.
-- **Socrative Session Details:** Provide session credentials in a secure manner (e.g., environment variables).
-
-Ensure you follow any API usage policies for services used.
-
-## Technologies Used
-
-- **Python**: Core programming language.
-- **OpenAI API**: For AI-powered question answering.
-- **BeautifulSoup/Selenium**: For web scraping and interaction.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ## Disclaimer
 
