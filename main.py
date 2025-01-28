@@ -44,14 +44,14 @@ def answer_question():
         answer = solve_question()
         answer = int(answer)
 
+        # Locate options
+        options_elements = driver.find_elements(By.CLASS_NAME, "answerContentWrapper")
+
         # Convert answer to index (0-3)
         selected_index = answer-1
         if selected_index < 0 or selected_index >= len(options_elements):
             print("Invalid answer index")
             selected_index = random.randint(0, 3)  # Fallback to random if invalid index
-
-        # Locate options
-        options_elements = driver.find_elements(By.CLASS_NAME, "answerContentWrapper")
 
         # Select the option
         options_elements[selected_index].click()
@@ -66,6 +66,7 @@ def answer_question():
     except Exception as e:
         print(f"Error: {e}")
 
+# Function to solve the question using Gemini API
 def solve_question():
     try:
         # Read the question using Selenium
