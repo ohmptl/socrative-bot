@@ -1,3 +1,4 @@
 selenium
+logging
 python-dotenv
 google-generativeai

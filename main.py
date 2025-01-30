@@ -1,4 +1,4 @@
-import time, random, os
+import time, random, os, logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -7,6 +7,10 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Set up logging
+logging.basicConfig(filename='attendance.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # Configure the Selenium WebDriver (adjust the driver path if necessary)
 driver = webdriver.Chrome()
@@ -25,14 +29,14 @@ def join_socrative_quiz(room_name, student_name):
         room_name_input = driver.find_element(By.ID, "studentRoomName")
         room_name_input.send_keys(room_name)
         room_name_input.send_keys(Keys.RETURN)
-        print(f"Joined room: {room_name}")
+        logging.info(f"Joined room: {room_name}")
         time.sleep(2)  # Wait for the next step
 
         # Enter the student name
         student_name_input = driver.find_element(By.ID, "student-name-input")
         student_name_input.send_keys(student_name)
         student_name_input.send_keys(Keys.RETURN)
-        print(f"Entered student name: {student_name}")
+        logging.info(f"Entered student name: {student_name}")
         time.sleep(2)  # Wait for the teacher to start the quiz
     except Exception as e:
         print(f"Error while joining room: {e}")
@@ -50,12 +54,12 @@ def answer_question():
         # Convert answer to index (0-3)
         selected_index = answer-1
         if selected_index < 0 or selected_index >= len(options_elements):
-            print("Invalid answer index")
+            logging.info("Invalid answer index")
             selected_index = random.randint(0, 3)  # Fallback to random if invalid index
 
         # Select the option
         options_elements[selected_index].click()
-        print("Answered a question.")
+        logging.info(f"Answered choice {selected_index+1}.")
         time.sleep(5)
 
         # Click the submit button
@@ -64,7 +68,7 @@ def answer_question():
         time.sleep(2)  # Short wait after submission
 
     except Exception as e:
-        print(f"Error: {e}")
+        logging.error(f"Error: {e}")
 
 # Function to solve the question using Gemini API
 def solve_question():
@@ -96,11 +100,11 @@ def solve_question():
         response = model.generate_content(input_text)
 
         question_number = response.text
-        print(input_text)
-        print(f"Gemini suggests: {question_number}")
+        logging.info(input_text)
+        logging.info(f"Gemini suggests: {question_number}")
         return question_number
     except Exception as e:
-        print(f"Error querying Gemini: {e}")
+        logging.error(f"Error querying Gemini: {e}")
         return random.choice([1, 2, 3, 4])
 
 # Function to check if rejoining the room is required
@@ -109,7 +113,7 @@ def check_rejoin(room_name, student_name):
         # Check for room name field
         room_name_field = driver.find_element(By.ID, "studentRoomName")
         if room_name_field.is_displayed():
-            print("Room name field detected. Rejoining...")
+            logging.info("Room name field detected. Rejoining...")
             join_socrative_quiz(room_name, student_name)
             return True
     except Exception:
@@ -119,7 +123,7 @@ def check_rejoin(room_name, student_name):
         # Check for student name field
         student_name_field = driver.find_element(By.ID, "student-name-input")
         if student_name_field.is_displayed():
-            print("Student name field detected. Re-entering...")
+            logging.info("Student name field detected. Re-entering...")
             join_socrative_quiz(room_name, student_name)
             return True
     except Exception:
@@ -142,11 +146,11 @@ def monitor_and_answer(room_name, student_name):
 
             # If the question has changed, answer it
             if current_question_text != last_question_text:
-                print(f"New question detected")
+                logging.info(f"New question detected")
                 last_question_text = current_question_text
                 answer_question()
-            else:
-                print("No new question yet. Retrying...")
+            #else:
+                #print("No new question yet. Retrying...")
             
             time.sleep(os.getenv('POLLING_INTERVAL'))  # Check frequently (adjust as needed)
         except Exception as e:
@@ -159,7 +163,7 @@ def run_quiz_bot(room_name, student_name):
         join_socrative_quiz(room_name, student_name)
         monitor_and_answer(room_name, student_name)
     except KeyboardInterrupt:
-        print("Quiz bot stopped.")
+        logging.info("Quiz bot stopped.")
     finally:
         driver.quit()
 
