@@ -56,7 +56,7 @@ ROOM_NAME=
 STUDENT_NAME=
 GEMINI_API_KEY=
 POLLING_INTERVAL=
-LOG_FILE
+LOG_FILE=
 ```
 
 Ensure you follow any API usage policies for services used.
