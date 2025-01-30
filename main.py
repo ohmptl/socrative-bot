@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Set up logging
-logging.basicConfig(filename='attendance.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
+log_file = os.getenv('LOG_FILE')
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configure the Selenium WebDriver (adjust the driver path if necessary)
 driver = webdriver.Chrome()

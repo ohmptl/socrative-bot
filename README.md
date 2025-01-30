@@ -47,6 +47,7 @@ You'll need to set up a few environment variables:
 * `STUDENT_NAME`: Your name as per instructor guidelines.
 * `GEMINI_API_KEY`: The Gemini API Key to run the AI.
 * `POLLING_INTERVAL`: The polling rate of the bot (default is 5).
+* `LOG_FILE`: The complete filepath to where you want your log to be saved
 
 Do this by creating a `.env` file in the root of the project as follows:
 
@@ -55,6 +56,7 @@ ROOM_NAME=
 STUDENT_NAME=
 GEMINI_API_KEY=
 POLLING_INTERVAL=
+LOG_FILE
 ```
 
 Ensure you follow any API usage policies for services used.
