@@ -149,12 +149,12 @@ def monitor_and_answer(room_name, student_name):
                 logging.info(f"New question detected")
                 last_question_text = current_question_text
                 answer_question()
-            #else:
-                #print("No new question yet. Retrying...")
+            else:
+                pass
             
             time.sleep(os.getenv('POLLING_INTERVAL'))  # Check frequently (adjust as needed)
         except Exception as e:
-            print(f"Waiting for the next question or quiz ended. Error: {e}")
+            print(f"Waiting for the next question or quiz ended.")
             time.sleep(5)
 
 # Function to generate an HTML file with the quiz questions
