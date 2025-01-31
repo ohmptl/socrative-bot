@@ -61,7 +61,7 @@ def answer_question():
         # Select the option
         options_elements[selected_index].click()
         logging.info(f"Answered choice {selected_index+1}.")
-        time.sleep(5)
+        time.sleep(random.randint(4, 10))  # Random wait time
 
         # Click the submit button
         submit_button = driver.find_element(By.ID, "submit-button")
