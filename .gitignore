@@ -1,2 +1,8 @@
 #Ignore Environment files
 .env
+
+#Ignore quiz files
+quiz_data.json
+
+#Ignore logs
+bot.log

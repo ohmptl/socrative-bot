@@ -1,4 +1,4 @@
-import time, random, os, logging
+import time, random, os, logging, json, requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -157,10 +157,54 @@ def monitor_and_answer(room_name, student_name):
             print(f"Waiting for the next question or quiz ended. Error: {e}")
             time.sleep(5)
 
+# Function to extract data similar to the provided JavaScript function
+def extract_data():
+    try:
+        room_code = os.getenv('ROOM_NAME')
+        url_get_activity_id = f"https://api.socrative.com/rooms/api/current-activity/{room_code}"
+        
+        response = requests.get(url_get_activity_id)
+        response.raise_for_status()
+        data = response.json()
+        
+        quiz_code = data['activity_id']
+        link_to_extract = f"https://teacher.socrative.com/quizzes/{quiz_code}/student?room={room_code}"
+        
+        # Callback functionality
+        logging.info(f"Extracted link: {link_to_extract}")
+
+        # Open a new tab
+        driver.execute_script("window.open('');")
+        
+        # Switch to the new tab
+        driver.switch_to.window(driver.window_handles[-1])
+        
+        # Navigate to the link
+        driver.get(link_to_extract)
+        
+        # Wait for the page to load and extract the JSON content
+        time.sleep(5)  # Adjust the sleep time as needed
+        json_data = driver.find_element(By.TAG_NAME, 'pre').text
+        
+        # Save JSON content to a file
+        with open('socrative-bot\\quiz_data.json', 'w') as json_file:
+            json.dump(json.loads(json_data), json_file, indent=4)
+        
+        # Close the new tab and switch back to the original tab
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
+        logging.info("Data extracted successfully, view quiz.html for the extracted data.")
+
+        return
+    except Exception as e:
+        logging.error(f"Error extracting data: {e}")
+        return None
+
 # Main function to run the bot
 def run_quiz_bot(room_name, student_name):
     try:
         join_socrative_quiz(room_name, student_name)
+        extract_data()
         monitor_and_answer(room_name, student_name)
     except KeyboardInterrupt:
         logging.info("Quiz bot stopped.")

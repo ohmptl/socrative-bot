@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Questions</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        question {
+            display: block;
+            margin-bottom: 20px;
+        }
+        data {
+            font-weight: bold;
+        }
+        description {
+            display: block;
+            margin: 10px 0;
+        }
+        alternatives {
+            margin-left: 20px;
+        }
+        alt {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Questions</h1>
+    <div id="questions-container"></div>
+
+    <script>
+        async function fetchQuizData() {
+            try {
+                const response = await fetch('quiz_data.json');
+                const data = await response.json();
+                displayQuestions(data.questions);
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        }
+
+        function displayQuestions(questions) {
+            let questionsHTML = '';
+
+            questions.forEach((questionData, iQ) => {
+                let answersHTML = '';
+
+                if (!questionData.answers || questionData.answers.length === 0) {
+                    answersHTML = '<i>This question does not have alternatives</i>';
+                } else {
+                    questionData.answers.forEach((answer, iA) => {
+                        const answerHTML = `
+                        <alt name="${String.fromCharCode(iA + 65)}">
+                                ${answer.text}
+                        </alt>
+                        `;
+                        answersHTML += answerHTML;
+                    });
+                }
+
+                answersHTML = '<alternatives>' + answersHTML + '</alternatives>';
+
+                const questionHTML = `
+                    <question>
+                        <data>Question ${iQ + 1}</data>
+                        <description>${questionData.question_text}</description>
+                        ${answersHTML}
+                    </question>
+                `;
+                questionsHTML += questionHTML;
+            });
+
+            document.getElementById('questions-container').innerHTML = questionsHTML;
+        }
+
+        // Fetch and display the quiz data when the page loads
+        fetchQuizData();
+    </script>
+</body>
+</html>
