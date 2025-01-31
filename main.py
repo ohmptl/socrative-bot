@@ -157,6 +157,65 @@ def monitor_and_answer(room_name, student_name):
             print(f"Waiting for the next question or quiz ended. Error: {e}")
             time.sleep(5)
 
+# Function to generate an HTML file with the quiz questions
+def generate_html(questions):
+    questions_html = ''
+    for iQ, question_data in enumerate(questions):
+        answers_html = ''
+        if not question_data.get('answers'):
+            answers_html = '<i>This question does not have alternatives</i>'
+        else:
+            for iA, answer in enumerate(question_data['answers']):
+                answers_html += f'<alt name="{chr(65 + iA)}">{answer["text"]}</alt>'
+        answers_html = f'<alternatives>{answers_html}</alternatives>'
+        questions_html += f'''
+            <question>
+                <data>Question {iQ + 1}</data>
+                <description>{question_data["question_text"]}</description>
+                {answers_html}
+            </question>
+        '''
+    html_content = f'''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quiz Questions</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }}
+            question {{
+                display: block;
+                margin-bottom: 20px;
+            }}
+            data {{
+                font-weight: bold;
+            }}
+            description {{
+                display: block;
+                margin: 10px 0;
+            }}
+            alternatives {{
+                margin-left: 20px;
+            }}
+            alt {{
+                display: block;
+            }}
+        </style>
+    </head>
+    <body>
+        <h1>Quiz Questions</h1>
+        <div id="questions-container">
+            {questions_html}
+        </div>
+    </body>
+    </html>
+    '''
+    return html_content
+
 # Function to extract data similar to the provided JavaScript function
 def extract_data():
     try:
@@ -186,9 +245,13 @@ def extract_data():
         time.sleep(5)  # Adjust the sleep time as needed
         json_data = driver.find_element(By.TAG_NAME, 'pre').text
         
-        # Save JSON content to a file
-        with open('socrative-bot\\quiz_data.json', 'w') as json_file:
-            json.dump(json.loads(json_data), json_file, indent=4)
+        # Generate HTML content
+        questions = json.loads(json_data)['questions']
+        html_content = generate_html(questions)
+        
+        # Save HTML content to a file
+        with open('socrative-bot/quiz.html', 'w') as html_file:
+            html_file.write(html_content)
         
         # Close the new tab and switch back to the original tab
         driver.close()

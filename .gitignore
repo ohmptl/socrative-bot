@@ -2,7 +2,7 @@
 .env
 
 #Ignore quiz files
-quiz_data.json
+quiz.html
 
 #Ignore logs
 bot.log
