@@ -48,6 +48,7 @@ You'll need to set up a few environment variables:
 * `GEMINI_API_KEY`: The Gemini API Key to run the AI.
 * `POLLING_INTERVAL`: The polling rate of the bot (default is 5).
 * `LOG_FILE`: The complete filepath to where you want your log to be saved (use double backslashes)
+* `HTML_FILE`: The complete filepath to where you want your quiz questions to be saved (use double backslashes)
 
 Do this by creating a `.env` file in the root of the project as follows:
 
@@ -57,6 +58,7 @@ STUDENT_NAME=
 GEMINI_API_KEY=
 POLLING_INTERVAL=
 LOG_FILE=
+HTML_FILE=
 ```
 
 Ensure you follow any API usage policies for services used.

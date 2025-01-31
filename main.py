@@ -37,6 +37,7 @@ def join_socrative_quiz(room_name, student_name):
         student_name_input.send_keys(student_name)
         student_name_input.send_keys(Keys.RETURN)
         logging.info(f"Entered student name: {student_name}")
+        extract_data()  # Extract quiz data
         time.sleep(2)  # Wait for the teacher to start the quiz
     except Exception as e:
         print(f"Error while joining room: {e}")
@@ -165,9 +166,10 @@ def generate_html(questions):
         if not question_data.get('answers'):
             answers_html = '<i>This question does not have alternatives</i>'
         else:
+            answers_html = '<ul>'
             for iA, answer in enumerate(question_data['answers']):
-                answers_html += f'<alt name="{chr(65 + iA)}">{answer["text"]}</alt>'
-        answers_html = f'<alternatives>{answers_html}</alternatives>'
+                answers_html += f'<li><alt name="{chr(65 + iA)}">{answer["text"]}</alt></li>'
+            answers_html += '</ul>'
         questions_html += f'''
             <question>
                 <data>Question {iQ + 1}</data>
@@ -203,6 +205,10 @@ def generate_html(questions):
             }}
             alt {{
                 display: block;
+            }}
+            ul {{
+                list-style-type: disc;
+                margin-left: 40px;
             }}
         </style>
     </head>
@@ -250,7 +256,8 @@ def extract_data():
         html_content = generate_html(questions)
         
         # Save HTML content to a file
-        with open('socrative-bot/quiz.html', 'w') as html_file:
+        html_save = os.getenv('HTML_FILE')
+        with open(html_save, 'w') as html_file:
             html_file.write(html_content)
         
         # Close the new tab and switch back to the original tab
@@ -267,7 +274,6 @@ def extract_data():
 def run_quiz_bot(room_name, student_name):
     try:
         join_socrative_quiz(room_name, student_name)
-        extract_data()
         monitor_and_answer(room_name, student_name)
     except KeyboardInterrupt:
         logging.info("Quiz bot stopped.")
