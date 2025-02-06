@@ -17,7 +17,7 @@ driver = webdriver.Chrome()
 
 # Set up the Gemini API
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 # Function to log in and join the quiz
 def join_socrative_quiz(room_name, student_name):
